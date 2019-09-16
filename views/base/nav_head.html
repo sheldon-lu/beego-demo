@@ -1,0 +1,73 @@
+<div class="layui-header">
+    <div class="layui-logo">[[% .siteName %]] 后台管理</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+        <li class="layui-nav-item">
+            <a href="javascript:;">其它系统</a>
+            <dl class="layui-nav-child">
+                <dd><a href="">gitlab</a></dd>
+                <dd><a href="">jenkins</a></dd>
+                <dd><a href="">邮箱</a></dd>
+            </dl>
+        </li>
+    </ul>
+    <ul class="layui-nav layui-layout-right">
+        <li class="layui-nav-item">
+            <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+            [[% .displayName %]]
+        </li>
+        <li class="layui-nav-item"><a href="/home/logout">退出系统</a></li>
+    </ul>
+</div>
+
+
+<script type="text/javascript">
+    function modifyPassword() {
+        layui.use('layer', function(){
+            var $ = layui.jquery, layer = layui.layer;
+            layer.open({
+                type: 1
+                ,title: '修改密码' //不显示标题栏
+                ,closeBtn: false
+                ,area: '300px;'
+                ,shade: 0.8
+                ,id: 'modifyPassword' //设定一个id，防止重复弹出
+                ,btn: ['修改密码', '取消']
+                ,btnAlign: 'c'
+                ,moveType: 1 //拖拽模式，0或者1
+                ,content: $("#modifypwdlayer")
+                ,success: function(layero){
+                    var btn = layero.find('.layui-layer-btn');
+                    btn.find('.layui-layer-btn0').attr({
+                        href: 'http://www.baidu.com/'
+                        ,target: '_blank'
+                    });
+                }
+            });
+        })
+    }
+</script>
+
+
+<div class="modify-pwd-layer aux-self" id="modifypwdlayer" style="display: none">
+    <form class="layui-form" action="" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">原密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码确认</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </form>
+</div>

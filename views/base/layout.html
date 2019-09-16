@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+
+    <title>[[% .siteName %]]</title>
+    [[%template "base/link.html"%]]
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    [[%template "base/nav_head.html" .%]]
+
+    [[%template "base/nav_left.html" .%]]
+
+    [[%.LayoutContent%]]
+
+    [[%template "base/footer.html"%]]
+
+</div>
+
+[[%template "base/link_js.html"%]]
+
+</body>
+</html>
