@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"beego-demo/models"
+	"fmt"
 )
 
 var (
@@ -26,6 +27,7 @@ func (self *ApisController) List() {
 
 	}
 	self.Data["ParentNode"] = result
+	fmt.Println(result)
 	self.Data["LeftNavResult"] = self.BaseController.GetSession("LeftNavResult")
 	self.TplName = "user/apis.html"
 }
@@ -38,7 +40,6 @@ func (self *ApisController) ListJson() {
 	resultTreeNode = []models.RbacApi{}
 	self.ajaxList("success", 0, int64(n), result)
 }
-
 
 func (self *ApisController) Add() {
 	_, action := self.GetControllerAndAction()
@@ -65,11 +66,11 @@ func (self *ApisController) Add() {
 			// result.Sort = sort
 			result.Title = title
 			if _, err := M.Object().Update(&result); err == nil {
-				self.ajaxList("update success",0, 0, nil)
+				self.ajaxList("update success", 0, 0, nil)
 			}
-			self.ajaxList("update failed",102, 0, nil)
+			self.ajaxList("update failed", 102, 0, nil)
 		} else {
-			self.ajaxList("update failed",102, 0, nil)
+			self.ajaxList("update failed", 102, 0, nil)
 		}
 	}
 

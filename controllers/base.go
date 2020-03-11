@@ -2,11 +2,13 @@ package controllers
 
 import (
 	"beego-demo/models"
+	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
-	"strconv"
-	"strings"
 )
 
 const (
@@ -52,7 +54,6 @@ func (self *BaseController) Prepare() {
 	}
 }
 
-
 func (self *BaseController) isLogin() (interface{}, bool) {
 	userData := self.GetSession("LoginUser")
 	if userData != nil {
@@ -61,12 +62,10 @@ func (self *BaseController) isLogin() (interface{}, bool) {
 	return nil, false //登出状态
 }
 
-
 func (self *BaseController) redirect(url string) {
 	self.Redirect(url, 302)
 	self.StopRun()
 }
-
 
 // ajax返回
 func (self *BaseController) ajaxMsg(msg interface{}, msgno int) {
@@ -77,7 +76,6 @@ func (self *BaseController) ajaxMsg(msg interface{}, msgno int) {
 	self.ServeJSON()
 	self.StopRun()
 }
-
 
 // ajax list
 func (self *BaseController) ajaxList(msg interface{}, msgno int, count int64, data interface{}) {
@@ -90,9 +88,6 @@ func (self *BaseController) ajaxList(msg interface{}, msgno int, count int64, da
 	self.ServeJSON()
 	self.StopRun()
 }
-
-
-
 
 func (self *BaseController) SessionRbac(roleid int) {
 	// result := models.User{EmployeeNumber: employeeid}
@@ -113,7 +108,7 @@ func (self *BaseController) SessionRbac(roleid int) {
 	// leftTreeResult = []orm.Params{}
 
 	// tmpResult := self.TreeNodeRecursion(accessResult, 0)
-	// fmt.Println(leftTreeResult)
+	fmt.Println(accessResult)
 	self.SetSession("LeftNavResult", accessResult)
 }
 
@@ -158,7 +153,7 @@ func (self *BaseController) CheckRbac(module string) bool {
 	returnResult := false
 	for _, v := range tmpResult.([]orm.Params) {
 		// 需要添加模糊，待优化 ~= /user/* /home/* 等
-		if (v["name"].(string) == module) {
+		if v["name"].(string) == module {
 			returnResult = true
 			break
 		}

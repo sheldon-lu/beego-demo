@@ -1,25 +1,23 @@
 package controllers
 
 import (
-
 	"beego-demo/common"
+	"beego-demo/common/hjwt"
 	"beego-demo/models"
 	"fmt"
-	"gopkg.in/ldap.v3"
 	"strconv"
+
+	"gopkg.in/ldap.v3"
 )
 
 type HomeController struct {
 	BaseController
 }
 
-
 func (self *HomeController) Logout() {
 	self.DelSession("LoginUser")
 	self.redirect(self.URLFor("HomeController.Login"))
 }
-
-
 
 func (self *HomeController) Login() {
 	if self.Ctx.Request.Method == "GET" {
@@ -28,23 +26,28 @@ func (self *HomeController) Login() {
 		username := self.GetString("username")
 		password := self.GetString("password")
 		// result := models.User{}
-		entry, res := self.LoginCheck(username, password)
+		token := hjwt.GenToken()
+		fmt.Println(token)
+		// entry, res := self.LoginCheck(username, password)
+		LoginUser, res := self.LoginCheck1(username, password)
 		resultroleid, _ := self.Permission(username)
 		if res == true {
-			LoginUser := self.UpdateUser(entry, password)
+			// LoginUser := self.UpdateUser(entry, password)
 			self.SetSession("LoginUser", LoginUser)
+			self.Ctx.SetCookie("Authorization", token, 360, "/*")
 			self.SessionRbac(resultroleid)
 			self.redirect(self.URLFor("HomeController.Index"))
 		} else {
 			self.redirect(self.URLFor("HomeController.Login"))
 		}
 		//self.SetSession("LoginUser", "true")
-		// self.SessionRbac(resultroleid)
+		//self.SessionRbac(resultroleid)
+		//self.Ctx.SetCookie("Authorization", token, 360, "/")
 		//self.redirect(self.URLFor("HomeController.Index"))
 	}
 }
 
-
+// LDAP
 func (self *HomeController) LoginCheck(username, password string) (*ldap.Entry, bool) {
 	userInfo, err := common.LdapAuth(username, password)
 	fmt.Println(userInfo, err)
@@ -57,6 +60,20 @@ func (self *HomeController) LoginCheck(username, password string) (*ldap.Entry, 
 	}
 }
 
+// COMMON
+func (self *HomeController) LoginCheck1(username, password string) (*models.User, bool) {
+	userInfo := models.UserGetByUsername(username)
+	fmt.Println(password)
+	fmt.Println(userInfo.Password)
+	if userInfo != nil && userInfo.Password == password {
+		//验证成功
+		return userInfo, true
+	} else {
+		//验证失败
+		return nil, false
+	}
+
+}
 
 func (self *HomeController) UpdateUser(entry *ldap.Entry, password string) *models.User {
 	//判断数据库中是否有username，有则修改，没有则添加
@@ -88,7 +105,6 @@ func (self *HomeController) UpdateUser(entry *ldap.Entry, password string) *mode
 		return user
 	}
 }
-
 
 func (self *HomeController) Index() {
 	self.Data["LeftNavResult"] = self.GetSession("LeftNavResult")

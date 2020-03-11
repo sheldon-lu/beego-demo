@@ -2,11 +2,11 @@ package models
 
 import (
 	"fmt"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
 )
-
 
 var (
 	o orm.Ormer
@@ -38,4 +38,3 @@ type M struct {
 func (this *M) Object() orm.Ormer {
 	return o
 }
-
